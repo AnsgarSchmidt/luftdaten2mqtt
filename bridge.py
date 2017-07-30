@@ -15,11 +15,11 @@ mqclient.loop_start()
 @app.route('/', methods=['GET', 'POST'])
 def index():
     content = request.get_json(silent=True)
-    mqclient.publish("luftdaten/esp8266id", content['esp8266id'])
-    mqclient.publish("luftdaten/software_version", content['software_version'])
+    id = content['esp8266id']
+    mqclient.publish("luftdaten/%s/software_version" % id, content['software_version'])
 
     for i in content['sensordatavalues']:
-        mqclient.publish("luftdaten/%s" % i['value_type'], i['value'])
+        mqclient.publish("luftdaten/%s/%s" % (id, i['value_type']), i['value'])
 
     return "Done"
 
